@@ -29,16 +29,20 @@ def configure_players():
     print("Type QUIT at any prompt to stop.\n")
     count = ask_number(f"How many players ({MIN_PLAYERS}-{MAX_PLAYERS})? ", MIN_PLAYERS, MAX_PLAYERS)
 
-    available = list(CHARACTERS)
     chosen = []
     for seat in range(1, count + 1):
-        print(f"\nPlayer {seat}, choose a character:  {numbered(available)}")
+        # Always number the full list, so each character keeps the same number (1 = Miss Scarlett ... 6 = Professor Plum).
+        print(f"\nPlayer {seat}, choose a character:  {numbered(CHARACTERS)}")
+        if chosen:
+            print("   Already taken: " + ", ".join(chosen))
         while True:
-            character = match_option(read_line("Character (number or name): "), available)
-            if character:
+            character = match_option(read_line("Character (number or name): "), CHARACTERS)
+            if character and character not in chosen:
                 break
-            print("   Not recognized - pick one from the list above.")
-        available.remove(character)
+            if character:
+                print(f"   {character} is already taken - pick another character.")
+            else:
+                print("   Not recognized - pick one from the list above.")
         chosen.append(character)
     return chosen
 
